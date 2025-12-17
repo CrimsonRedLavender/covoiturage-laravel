@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('last_name');
             $table->string('first_name');
-            $table->string('email')->unique();
+            $table->string('email')->unique();// Contrainte d'unicité car utilisé comme login
             $table->string('password');
             $table->string('mobile');
             $table->string('address');

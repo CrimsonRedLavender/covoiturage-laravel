@@ -15,11 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Attention : Il faut que les références soient cohérentes
+        $this->call([
+            UserSeeder::class,
+            TripSeeder::class, // Doit créer stops + proposals
         ]);
     }
 }

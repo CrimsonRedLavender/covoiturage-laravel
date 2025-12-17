@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('stops', function (Blueprint $table) {
             $table->id();
             $table->integer('order');
-            $table->timestamp('departure_time')->useCurrent();// default timestamp requis par Mysql
+            $table->timestamp('departure_time')->useCurrent();// default timestamp requis par mysql
             $table->timestamp('arrival_time')->useCurrent();
             $table->string('address');
-            $table->foreignId('trip_id')
+            // Sans unique, les seeders pourraient mettre des proposals diff pour un meme trip
+            $table->foreignIdFor(\App\Models\Trip::class)->unique()
                 ->constrained('trips', 'id')
                 ->cascadeOnDelete();
         });

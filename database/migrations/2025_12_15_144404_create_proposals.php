@@ -12,18 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('proposals', function (Blueprint $table) {
-            $table->foreignId('trip_id')
-                ->constrained('trips')
-                ->cascadeOnDelete();
-            $table->foreignId('vehicle_id')
-                ->constrained('vehicles')
-                ->cascadeOnDelete();
-            $table->string('comment')->nullable();
-            $table->foreignId('user_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
-            $table->primary(['trip_id', 'vehicle_id']);
+            $table->id();
+            $table->string('comment', 200)->nullable();
+            $table->foreignIdFor(\App\Models\Trip::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\Vehicle::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
         });
+
 
     }
 

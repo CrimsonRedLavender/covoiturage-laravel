@@ -12,19 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('reservations', function (Blueprint $table) {
-            $table->foreignId('trip_id')
-                ->constrained()
-                ->cascadeOnDelete();
-            $table->foreignId('vehicle_id')
-                ->constrained();
-            $table->string('comment')->nullable();
-            $table->primary(['trip_id', 'vehicle_id']);
+            $table->id();
 
-            $table->foreignId('user_id')
-                ->constrained()
-                ->cascadeOnDelete();
+            $table->string('comment', 200)->nullable();
+
+            $table->foreignIdFor(\App\Models\Trip::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
         });
-
     }
 
     /**
