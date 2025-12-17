@@ -6,5 +6,5 @@ use Illuminate\Routing\Controller;
 
 class LoginController extends Controller
 {
-    public function show() { return view('signin', ['qui' => "passe partout"]); }
+    public function show() { return view('./signin/signin'); }
 }
