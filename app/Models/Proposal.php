@@ -21,8 +21,8 @@ class Proposal extends Model
      */
     public $timestamps = false;
 
-    public function trip (): HasOne {
-        return $this->hasOne(Trip::class);
+    public function trip (): BelongsTo {
+        return $this->belongsTo(Trip::class);
     }
 
     public function vehicle (): BelongsTo {

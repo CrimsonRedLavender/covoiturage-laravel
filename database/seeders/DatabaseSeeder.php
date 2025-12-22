@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +14,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-        // Attention : Il faut que les références soient cohérentes
+        // Les données sont insérées en base dès que create() ou save() sont appellées dans les seeders !
         $this->call([
             UserSeeder::class,
-            TripSeeder::class, // Doit créer stops + proposals
+            VehicleSeeder::class,
+            TripSeeder::class,
+            StopSeeder::class,
+            ProposalSeeder::class,
+            ReservationSeeder::class,
         ]);
     }
 }

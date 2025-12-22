@@ -26,7 +26,7 @@ class Trip extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    public function proposals (): HasOne {
+    public function proposals (): HasOne { // C'est Trip qui "own" la relation avec Proposal
         return $this->hasOne(Proposal::class);
     }
 }

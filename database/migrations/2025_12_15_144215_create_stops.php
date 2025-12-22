@@ -18,7 +18,7 @@ return new class extends Migration
             $table->timestamp('arrival_time')->useCurrent();
             $table->string('address');
             // Sans unique, les seeders pourraient mettre des proposals diff pour un meme trip
-            $table->foreignIdFor(\App\Models\Trip::class)->unique()
+            $table->foreignIdFor(\App\Models\Trip::class)
                 ->constrained('trips', 'id')
                 ->cascadeOnDelete();
         });

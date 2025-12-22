@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Trip;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Trip>
+ * @extends Factory<Trip>
  */
 class TripFactory extends Factory
 {
@@ -17,7 +18,7 @@ class TripFactory extends Factory
     public function definition(): array
     {
         return [
-            'available_seats'=>$this->faker->numberBetween(2,4),
+            'available_seats'=>$this->faker->numberBetween(8000,9000),
         ];
     }
 }

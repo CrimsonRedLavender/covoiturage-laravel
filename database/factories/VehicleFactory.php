@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Vehicle;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vehicle>
+ * @extends Factory<Vehicle>
  */
 class VehicleFactory extends Factory
 {
@@ -20,10 +21,9 @@ class VehicleFactory extends Factory
         return [
             'brand' => fake()->word(),
             'model' => fake()->word(),
-            'seats' => fake()->numberBetween(1,5),
+            'seats' => fake()->numberBetween(2,5),
             'license_plate' => fake()->word(),
             'color' => fake()->colorName(),
-            'user_id' => User::factory(),
         ];
     }
 }

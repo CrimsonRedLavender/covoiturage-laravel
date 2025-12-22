@@ -2,12 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\Reservation;
 use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Reservation>
+ * @extends Factory<Reservation>
  */
 class ReservationFactory extends Factory
 {
@@ -20,8 +21,6 @@ class ReservationFactory extends Factory
     {
         return [
             'comment'=>fake()->text(),
-            'trip_id'=>Trip::factory(),
-            'user_id'=>User::factory()
         ];
     }
 }

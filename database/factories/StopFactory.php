@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Stop;
 use App\Models\Trip;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Stop>
+ * @extends Factory<Stop>
  */
 class StopFactory extends Factory
 {
@@ -17,12 +18,14 @@ class StopFactory extends Factory
      */
     public function definition(): array
     {
+        $departure = fake()->dateTimeBetween('-1 year', '-1 week');
+        $arrival = fake()->dateTimeBetween($departure, '+1 week');
+
         return [
             "order" => fake()->numberBetween(1,5), // A ecraser dans le Seeder
-            "departure_time" => fake()->dateTimeBetween('-1 year', '-1 week'),
-            "arrival_time" => fake()->dateTimeBetween(),
+            "departure_time" => $departure,
+            "arrival_time" => $arrival,
             "address" => fake()->address(),
-            "trip_id" => Trip::Factory(),
         ];
     }
 }
