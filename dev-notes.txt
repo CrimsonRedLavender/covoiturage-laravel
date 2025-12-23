@@ -1,1 +1,30 @@
 composer dump-autoload
+
+véhicules:
+voir -> supprimer, ajouter, modifier
+
+Ecran trips:
+Rechercher, proposer, voir un trajet -> s'y inscrire
+
+Visiteurs:
+inscription, connexion
+
+Utilisateur:
+modifier ses infos
+
+
+CSRF, Auth avec Breeze, Validation données formulaire, Gates pour empécher le proposeur de s'inscire comem réseveur
+à son propre trajet
+
+
+
+Laravel’s standard naming conventions:
+
+Action |	Standard Method Name |	Meaning
+Show all resources |	index() |	List all vehicles
+Show one resource	show()	Show a single vehicle
+Show form to create	create()	Display form
+Store new resource	store()	Save new vehicle
+Show form to edit	edit()	Display edit form
+Update resource	update()	Save changes
+Delete resource	destroy()	Delete vehicle
