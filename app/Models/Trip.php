@@ -11,12 +11,13 @@ class Trip extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'available_seats',
+    ];
+
     public $timestamps = false;
 
-    protected $casts = [
-        'departure_time' => 'datetime',
-        'arrival_time' => 'datetime',
-        ];
+
 
     public function stops (): HasMany {
         return $this->hasMany(Stop::class);

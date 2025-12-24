@@ -10,6 +10,19 @@ class Stop extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'order',
+        'departure_time',
+        'arrival_time',
+        'address',
+        'trip_id',
+    ];
+
+    protected $casts = [
+        'departure_time' => 'datetime',
+        'arrival_time' => 'datetime',
+    ];
+
     public $timestamps = false;
 
     public function trip (): BelongsTo {

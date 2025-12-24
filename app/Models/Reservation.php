@@ -11,6 +11,13 @@ class Reservation extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'comment',
+        'trip_id',
+        'user_id',
+    ];
+
+
     public $timestamps = false;
 
     public function user (): BelongsTo {

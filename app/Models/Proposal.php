@@ -11,6 +11,13 @@ class Proposal extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'comment',
+        'trip_id',
+        'user_id',
+        'vehicle_id',
+    ];
+
     /*
      * https://laravel.com/docs/12.x/eloquent#timestamps
      * By default, Eloquent expects created_at and updated_at

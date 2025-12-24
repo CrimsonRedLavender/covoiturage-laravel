@@ -16,7 +16,7 @@ modifier ses infos
 CSRF, Auth avec Breeze, Validation données formulaire, Gates pour empécher le proposeur de s'inscire comem réseveur
 à son propre trajet
 
-
+https://github.com/alexeymezenin/laravel-best-practices/blob/master/README.md
 
 Laravel’s standard naming conventions:
 
@@ -28,3 +28,9 @@ Store new resource	store()	Save new vehicle
 Show form to edit	edit()	Display edit form
 Update resource	update()	Save changes
 Delete resource	destroy()	Delete vehicle
+
+
+Si on a le temps:
+- when a vehicle is deleted by a user, it shouldnt be deleted from the db if
+proposals exist or the proposals are gonna get deleted too!!!
+-

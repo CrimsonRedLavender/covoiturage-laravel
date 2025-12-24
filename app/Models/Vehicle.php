@@ -12,6 +12,15 @@ class Vehicle extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'brand',
+        'model',
+        'seats',
+        'license_plate',
+        'color',
+        'user_id',
+    ];
+    
     public $timestamps = false;
 
     public function proposals(): HasMany {
