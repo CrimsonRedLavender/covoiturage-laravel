@@ -14,9 +14,11 @@ class TripController extends Controller
     {
         $user = Auth::user();
 
-        $trips = Trip::whereRelation('proposals', 'user_id', $user->id)->get();
+        $reservations = $user->reservations()->with(['trip.stops', 'trip.proposals.vehicle'])->get();
+        $proposedTrips = $user->proposals()->with(['trip.stops', 'trip.proposals.vehicle'])->get()->pluck('trip');
 
-        return view('trips.index', ['trips' => $trips]);
+
+        return view('trips.index', ['reservations' => $reservations, 'proposedTrips' => $proposedTrips,]);
     }
 
 
@@ -70,5 +72,8 @@ class TripController extends Controller
         return redirect()->route('trips.my')->with('message', 'Trajet proposé avec succès');
     }
 
-    public function search() { return view('trips.search'); }
+    public function search()
+    {
+        return view('trips.search');
+    }
 }

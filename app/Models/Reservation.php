@@ -20,11 +20,13 @@ class Reservation extends Model
 
     public $timestamps = false;
 
-    public function user (): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function trip(): HasOne {
-        return $this->hasOne(Trip::class);
+    public function trip(): BelongsTo
+    {
+        return $this->BelongsTo(Trip::class);
     }
 }
