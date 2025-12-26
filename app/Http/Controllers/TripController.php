@@ -10,9 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class TripController extends Controller
 {
-    public function index() { $trips = Trip::all();
+    public function index()
+    {
+        $user = Auth::user();
+
+        $trips = Trip::whereRelation('proposals', 'user_id', $user->id)->get();
+
         return view('trips.index', ['trips' => $trips]);
     }
+
 
     public function create()
     {

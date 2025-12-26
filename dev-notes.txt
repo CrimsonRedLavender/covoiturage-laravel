@@ -18,6 +18,13 @@ CSRF, Auth avec Breeze, Validation données formulaire, Gates pour empécher le 
 
 https://github.com/alexeymezenin/laravel-best-practices/blob/master/README.md
 
+A lire:
+- https://laravel.com/docs/11.x/queries
+- https://laravel.com/docs/11.x/eloquent-relationships
+
+https://www.youtube.com/watch?v=GRKIX8SZ7KQ
+
+
 Laravel’s standard naming conventions:
 
 Action |	Standard Method Name |	Meaning
@@ -30,7 +37,7 @@ Update resource	update()	Save changes
 Delete resource	destroy()	Delete vehicle
 
 
-Si on a le temps:
+A faire:
 - when a vehicle is deleted by a user, it shouldnt be deleted from the db if
 proposals exist or the proposals are gonna get deleted too!!!
 -
