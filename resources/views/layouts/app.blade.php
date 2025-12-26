@@ -8,10 +8,33 @@
 
 <body>
 
-{{-- Single unified navigation --}}
 @include('layouts.navigation')
 
-<!-- PAGE CONTENT -->
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+<!-- Errors custom uniquement -->
+@if (session('error'))
+    <div class="alert alert-error">
+        {{ session('error') }}
+    </div>
+@endif
+
+<!-- Ces errors sont passés auto par Laravel (validations, etc) -->
+@if ($errors->any())
+    <div class="alert alert-error">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
 <div class="container">
     <header>
         <h1>{{ $title ?? '' }}</h1>
@@ -20,7 +43,7 @@
     {{ $slot }}
 </div>
 
-<!-- FOOTER -->
+
 <footer>
     BestMeds - Covoiturage © {{ date('Y') }}
 </footer>

@@ -24,6 +24,7 @@ class VehicleController extends Controller
         if ($vehicle->user_id !== Auth::id()) abort(403);
         return view('vehicles.edit', ['vehicle' => $vehicle]);
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -42,7 +43,7 @@ class VehicleController extends Controller
             'color' => $request->color,
         ]);
 
-        return redirect()->route('vehicles.my');
+        return redirect()->route('vehicles.my')->with('success', 'Véhicule ajouté avec succès.');
     }
 
     public function update(Request $request, Vehicle $vehicle)
@@ -65,7 +66,7 @@ class VehicleController extends Controller
             'color' => $request->color,
         ]);
 
-        return redirect()->route('vehicles.my');
+        return redirect()->route('vehicles.my')->with('success', 'Véhicule mis à jour.');
     }
 
 
@@ -73,6 +74,6 @@ class VehicleController extends Controller
     {
         if ($vehicle->user_id !== Auth::id()) abort(403);
         $vehicle->delete();
-        return redirect()->route('vehicles.index');
+        return redirect()->route('vehicles.my')->with('success', 'Véhicule supprimé.');
     }
 }
