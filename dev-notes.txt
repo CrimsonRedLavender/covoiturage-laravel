@@ -19,6 +19,7 @@ CSRF, Auth avec Breeze, Validation données formulaire, Gates pour empécher le 
 https://github.com/alexeymezenin/laravel-best-practices/blob/master/README.md
 
 A lire:
+https://laravel.com/docs/11.x/eloquent#retrieving-models
 - https://laravel.com/docs/11.x/queries
 - https://laravel.com/docs/11.x/eloquent-relationships
 

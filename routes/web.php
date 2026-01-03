@@ -6,7 +6,6 @@ use App\Http\Controllers\TripController;
 use App\Http\Controllers\VehicleController;
 
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -22,24 +21,47 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+
+    // Show the User's vehicle
+    Route::get('/vehicles/my-vehicles', [VehicleController::class, 'index'])->name('vehicles.my');
+    Route::get('/vehicles', function () {
+        return redirect()->route('vehicles.my');
+    });
+
+    // Create a vehicle
     Route::get('/vehicles/create', [VehicleController::class, 'create'])->name('vehicles.create');
     Route::post('/vehicles', [VehicleController::class, 'store'])->name('vehicles.store');
+
+    // Edit a vehicle
     Route::get('/vehicles/{vehicle}/edit', [VehicleController::class, 'edit'])->name('vehicles.edit');
     Route::put('/vehicles/{vehicle}', [VehicleController::class, 'update'])->name('vehicles.update');
+
+
     Route::delete('/vehicles/{vehicle}', [VehicleController::class, 'destroy'])->name('vehicles.destroy');
-    Route::get('/vehicles/my-vehicles', [VehicleController::class, 'index'])
-    ->middleware('auth')
-    ->name('vehicles.my');
 });
 
 Route::middleware(['auth'])->group(function () {
+
+    // Show all trips of the user
+    Route::get('/trips/my-trips', [TripController::class, 'index'])->name('trips.my');
+
+    // Create a trip (proposal)
     Route::get('/trips/create', [TripController::class, 'create'])->name('trips.create');
     Route::post('/trips', [TripController::class, 'store'])->name('trips.store');
-    Route::get('/trips/my-trips', [TripController::class, 'index']) ->middleware('auth') ->name('trips.my');
-    Route::get('/trips/search', [TripController::class, 'search']) ->middleware('auth') ->name('trips.search');
+
+    //Search for a trip
+    Route::get('/trips/search', [TripController::class, 'search'])->name('trips.search');
+
+    // Show one trip
+    Route::get('/trips/{trip}', [TripController::class, 'show'])->name('trips.show');
+
+    // Edit + update a trip
+    Route::get('/trips/{trip}/edit', [TripController::class, 'edit'])->name('trips.edit');
+    Route::put('/trips/{trip}', [TripController::class, 'update'])->name('trips.update');
+
+    // Delete
+    Route::delete('/trips/{trip}', [TripController::class, 'destroy'])->name('trips.destroy');
 });
 
 
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
