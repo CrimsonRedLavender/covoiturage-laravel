@@ -18,10 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Vehicle::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
         });
-
-
     }
-
     /**
      * Reverse the migrations.
      */

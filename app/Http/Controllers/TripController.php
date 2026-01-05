@@ -30,47 +30,63 @@ class TripController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'available_seats' => 'required|integer|min:1',
+        // -------------------------
+        // 1. VALIDATION
+        // -------------------------
+        $validated = $request->validate([
             'vehicle_id' => 'required|exists:vehicles,id',
+            'available_seats' => 'required|integer|min:1',
+            'comment' => 'nullable|string|max:200',
 
-            'departure_address' => 'required|string|max:255',
-            'departure_time' => 'required|date',
-
-            'arrival_address' => 'required|string|max:255',
-            'arrival_time' => 'required|date',
+            'stops' => 'required|array|min:1|max:10',
+            'stops.*.address' => 'required|string|max:255',
+            'stops.*.departure_time' => 'required|date',
+            'stops.*.arrival_time' => 'required|date|after_or_equal:stops.*.departure_time',
         ]);
 
 
+        // -------------------------
+        // 2. CREATE TRIP
+        // -------------------------
         $trip = Trip::create([
-            'available_seats' => $request->available_seats,
+            'available_seats' => $validated['available_seats'],
         ]);
 
-        Stop::create([
-            'order' => 1,
-            'address' => $request->departure_address,
-            'departure_time' => $request->departure_time,
-            'arrival_time' => $request->departure_time,
+
+        // -------------------------
+        // 3. CREATE PROPOSAL
+        // -------------------------
+        $proposal = Proposal::create([
             'trip_id' => $trip->id,
+            'vehicle_id' => $validated['vehicle_id'],
+            'user_id' => auth()->id(),
+            'comment' => $validated['comment'] ?? null,
         ]);
 
-        Stop::create([
-            'order' => 2,
-            'address' => $request->arrival_address,
-            'departure_time' => $request->arrival_time,
-            'arrival_time' => $request->arrival_time,
-            'trip_id' => $trip->id,
-        ]);
 
-        Proposal::create([
-            'comment' => $request->comment,
-            'trip_id' => $trip->id,
-            'vehicle_id' => $request->vehicle_id,
-            'user_id' => Auth::id(),
-        ]);
+        // -------------------------
+        // 4. CREATE STOPS
+        // -------------------------
+        foreach ($validated['stops'] as $index => $stopData) {
+            Stop::create([
+                'trip_id' => $trip->id,
+                'order' => $index + 1,
+                'address' => $stopData['address'],
+                'departure_time' => $stopData['departure_time'],
+                'arrival_time' => $stopData['arrival_time'],
+            ]);
+        }
 
-        return redirect()->route('trips.my')->with('message', 'Trajet proposé avec succès');
+
+        // -------------------------
+        // 5. REDIRECT
+        // -------------------------
+        return redirect()
+            ->route('trips.my')
+            ->with('success', 'Trajet créé avec succès !');
     }
+
+
 
     public function search()
     {

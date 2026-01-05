@@ -41,4 +41,10 @@ Delete resource	destroy()	Delete vehicle
 A faire:
 - when a vehicle is deleted by a user, it shouldnt be deleted from the db if
 proposals exist or the proposals are gonna get deleted too!!!
--
+- when a user wants to create a trip, the number of seat available must be above 0 (note: check if
+ its done in vehicle store validation) and <= seats_of_vehicle - 1 (the driver).
+
+
+il faut faire évoluer le schéma de la base:
+avoir un champ actif/passif au niveau du trip
+avoir 2 champs departure time departure location au stops

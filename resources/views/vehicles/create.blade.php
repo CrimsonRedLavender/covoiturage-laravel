@@ -15,7 +15,7 @@
         <label>Modèle</label><br>
         <input type="text" name="model" required><br><br>
 
-        <label>Nombre de places</label><br>
+        <label>Nombre de places (y compris conducteur)</label><br>
         <input type="number" name="seats" required><br><br>
 
         <label>Immatriculation</label><br>
