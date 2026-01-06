@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->integer('available_seats');
+            $table->boolean('is_active')->default(true); // always give boolean fields a default value
         });
     }
 

@@ -73,6 +73,9 @@ class VehicleController extends Controller
     public function destroy(Vehicle $vehicle)
     {
         if ($vehicle->user_id !== Auth::id()) abort(403);
+        if ($vehicle->proposals()->exists()) {
+            return back()->with('error', 'Ce véhicule est utilisé dans un trajet et ne peut pas être supprimé.');
+        }
         $vehicle->delete();
         return redirect()->route('vehicles.my')->with('success', 'Véhicule supprimé.');
     }

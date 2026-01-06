@@ -8,6 +8,7 @@ use App\Http\Controllers\VehicleController;
 
 Route::get('/', function () {
     return view('welcome');
+    //return redirect('/dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -55,12 +56,8 @@ Route::middleware(['auth'])->group(function () {
     // Show one trip
     Route::get('/trips/{trip}', [TripController::class, 'show'])->name('trips.show');
 
-    // Edit + update a trip
-    Route::get('/trips/{trip}/edit', [TripController::class, 'edit'])->name('trips.edit');
-    Route::put('/trips/{trip}', [TripController::class, 'update'])->name('trips.update');
-
-    // Delete
-    Route::delete('/trips/{trip}', [TripController::class, 'destroy'])->name('trips.destroy');
+    // Update a trip by cancelling it
+    Route::patch('/trips/{trip}/deactivate', [TripController::class, 'deactivate'])->name('trips.deactivate');
 });
 
 

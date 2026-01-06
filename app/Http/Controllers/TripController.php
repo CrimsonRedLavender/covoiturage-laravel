@@ -14,11 +14,11 @@ class TripController extends Controller
     {
         $user = Auth::user();
 
-        $reservations = $user->reservations()->with(['trip.stops', 'trip.proposals.vehicle'])->get();
-        $proposedTrips = $user->proposals()->with(['trip.stops', 'trip.proposals.vehicle'])->get()->pluck('trip');
+        $reservations = $user->reservations()->with(['trip.stops', 'trip.proposal.vehicle'])->get();
+        $proposals = $user->proposals()->with(['trip.stops', 'trip.proposal.vehicle']) ->get();
 
 
-        return view('trips.index', ['reservations' => $reservations, 'proposedTrips' => $proposedTrips,]);
+        return view('trips.index', ['reservations' => $reservations, 'proposals' => $proposals]);
     }
 
 
@@ -86,7 +86,13 @@ class TripController extends Controller
             ->with('success', 'Trajet créé avec succès !');
     }
 
+    public function deactivate(Trip $trip)
+    {
+        if ($trip->proposal->user_id !== auth()->id()) { abort(403); }
+        $trip->update(["is_active" => false]);
 
+        return redirect()->route('trips.my')->with('success', 'Trajet annulé.');
+    }
 
     public function search()
     {

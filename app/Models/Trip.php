@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Models\Proposal;use App\Models\Models\Reservation;use App\Models\Models\Stop;use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;

@@ -1,5 +1,8 @@
 composer dump-autoload
 
+Css and resources : file in public folder arent used when you use vite, needs to register them in vite config and
+put them in resources folder
+
 véhicules:
 voir -> supprimer, ajouter, modifier
 
@@ -22,8 +25,9 @@ A lire:
 https://laravel.com/docs/11.x/eloquent#retrieving-models
 - https://laravel.com/docs/11.x/queries
 - https://laravel.com/docs/11.x/eloquent-relationships
+- https://stackoverflow.com/questions/52918718/magic-methods-in-laravel
 
-https://www.youtube.com/watch?v=GRKIX8SZ7KQ
+https://www.youtube.com/watch?v=GRKIX8SZ7KQ tutoriel blade
 
 
 Laravel’s standard naming conventions:
@@ -39,12 +43,18 @@ Delete resource	destroy()	Delete vehicle
 
 
 A faire:
-- when a vehicle is deleted by a user, it shouldnt be deleted from the db if
+- page de détail d'un trajet qui doit tenir en compte si l'utilisateur est proposeur ou reserveur et si
+il ne sait pas deja inscrit. Actions: Annuler, sinscrire, se désinscrire
+- page de recherche d'un trajet
+- changer ui de page de connexion, page d'accueil unlogged, page de modif du compte
+- améliorer css
+- redirection to dashboard si loggé, sinon reste accueil
+- tester l'appli
+- dégager les abort, privilégié les gates
+- faire les gates où c'est pertinent
+- $vehicle->proposals->isNotEmpty()  when a vehicle is deleted by a user, it shouldnt be deleted from the db if
 proposals exist or the proposals are gonna get deleted too!!!
 - when a user wants to create a trip, the number of seat available must be above 0 (note: check if
  its done in vehicle store validation) and <= seats_of_vehicle - 1 (the driver).
-
-
-il faut faire évoluer le schéma de la base:
-avoir un champ actif/passif au niveau du trip
-avoir 2 champs departure time departure location au stops
+- dates cohérentes quand tu créé un trajet
+- validation des formulaires
