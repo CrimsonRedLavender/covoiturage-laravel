@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Models\Proposal;use App\Models\Models\Reservation;use App\Models\Models\Stop;use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -13,6 +13,7 @@ class Trip extends Model
 
     protected $fillable = [
         'available_seats',
+        'is_active',
     ];
 
     public $timestamps = false;
@@ -27,7 +28,7 @@ class Trip extends Model
         return $this->hasMany(Reservation::class);
     }
 
-    public function proposals (): HasOne { // C'est Trip qui "own" la relation avec Proposal
+    public function proposal (): HasOne { // C'est Trip qui "own" la relation avec Proposal
         return $this->hasOne(Proposal::class);
     }
 }

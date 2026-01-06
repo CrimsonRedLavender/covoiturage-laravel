@@ -97,6 +97,7 @@ button:hover, .btn:hover {
 }
 
 /* Delete button */
+
 .btn-danger {
     background: #c62828;
 }
@@ -104,6 +105,17 @@ button:hover, .btn:hover {
 .btn-danger:hover {
     background: #8e1c1c;
 }
+
+/* Informative text (trip index) */
+
+.text-success {
+    color: #198754; /* green */
+}
+
+.text-danger {
+    color: #dc3545; /* red */
+}
+
 
 /* ------------------------------
    ALERTS

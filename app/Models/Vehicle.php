@@ -20,7 +20,7 @@ class Vehicle extends Model
         'color',
         'user_id',
     ];
-    
+
     public $timestamps = false;
 
     public function proposals(): HasMany {
