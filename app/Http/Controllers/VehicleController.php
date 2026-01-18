@@ -6,6 +6,13 @@ use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/*
+To eager load (load related models),
+- use with() when you are fetching a model and want its related models
+- use load() when you already have the model and want its related models
+- Auth::user() is the current user's model
+ */
+
 class VehicleController extends Controller
 {
     public function index()

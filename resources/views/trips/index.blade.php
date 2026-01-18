@@ -9,7 +9,7 @@
             <thead>
             <tr>
                 <th>Trip ID</th>
-                <th>Étapes</th>
+                <th>Destination finale</th>
                 <th>Conducteur</th>
                 <th>Véhicule</th>
                 <th>Commentaire</th>
@@ -22,31 +22,14 @@
                 @php
                     $trip = $reservation->trip;
                     $proposal = $trip->proposal;
-                    $stops = $trip->stops->sortBy('order');
-                    $first = $stops->first();
-                    $last = $stops->last();
+                    $last = $trip->stops->sortBy('order')->last();
                 @endphp
 
                 <tr>
                     <td>{{ $trip->id }}</td>
 
                     <td>
-                        @if ($stops->count() === 1)
-                            <div>
-                                <strong>Une seule étape :</strong><br>
-                                {{ $first->address }} — {{ $first->departure_time }}
-                            </div>
-                        @else
-                            <div>
-                                <strong>Départ :</strong><br>
-                                {{ $first->address }} — {{ $first->departure_time }}
-                            </div>
-
-                            <div style="margin-top:6px;">
-                                <strong>Arrivée :</strong><br>
-                                {{ $last->address }} — {{ $last->departure_time }}
-                            </div>
-                        @endif
+                        {{ $last->address }} — {{ $last->arrival_time }}
                     </td>
 
                     <td>{{ $proposal->user->last_name }} {{ $proposal->user->first_name }}</td>
@@ -60,15 +43,13 @@
                     <td>{{ $reservation->comment ?? '—' }}</td>
 
                     <td>
-                        <a class="btn" href="">Voir</a>
+                        <a class="btn" href="{{ route('trips.show', $trip) }}">Voir</a>
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
     @endif
-
-
 
 
 
@@ -83,7 +64,7 @@
             <thead>
             <tr>
                 <th>Trip ID</th>
-                <th>Étapes</th>
+                <th>Destination finale</th>
                 <th>Commentaire</th>
                 <th>Places</th>
                 <th>Véhicule</th>
@@ -96,31 +77,14 @@
             @foreach ($proposals as $proposal)
                 @php
                     $trip = $proposal->trip;
-                    $stops = $trip->stops->sortBy('order');
-                    $first = $stops->first();
-                    $last = $stops->last();
+                    $last = $trip->stops->sortBy('order')->last();
                 @endphp
 
                 <tr>
                     <td>{{ $trip->id }}</td>
 
                     <td>
-                        @if ($stops->count() === 1)
-                            <div>
-                                <strong>Une seule étape :</strong><br>
-                                {{ $first->address }} — {{ $first->departure_time }}
-                            </div>
-                        @else
-                            <div>
-                                <strong>Départ :</strong><br>
-                                {{ $first->address }} — {{ $first->departure_time }}
-                            </div>
-
-                            <div style="margin-top:6px;">
-                                <strong>Arrivée :</strong><br>
-                                {{ $last->address }} — {{ $last->departure_time }}
-                            </div>
-                        @endif
+                        {{ $last->address }} — {{ $last->arrival_time }}
                     </td>
 
                     <td>{{ $proposal->comment ?? '—' }}</td>
@@ -142,22 +106,12 @@
                     </td>
 
                     <td>
-                        <a class="btn" href="">Voir</a>
-
-                        <form action="{{ route('trips.deactivate', $trip) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('PATCH')
-                            <button class="btn-danger"
-                                    onclick="return confirm('Voulez-vous vraiment annuler ce trajet ?');">
-                                Annuler
-                            </button>
-                        </form>
+                        <a class="btn" href="{{ route('trips.show', $trip) }}">Voir</a>
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
     @endif
-
 
 </x-app-layout>

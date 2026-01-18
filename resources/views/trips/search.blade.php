@@ -1,82 +1,113 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h1 class="text-xl font-semibold">Rechercher un trajet</h1>
-    </x-slot>
+<x-app-layout :title="'Recherche de trajets'">
 
-    <div class="max-w-4xl mx-auto p-6">
+    <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
 
-        {{-- FORMULAIRE DE RECHERCHE --}}
-        <form method="GET" action="{{ route('trips.search') }}" class="space-y-4 mb-8">
+    <h1 class="page-title">Rechercher un trajet</h1>
 
-            <div>
-                <label class="block font-medium">Départ</label>
-                <input
-                    type="text"
-                    name="from"
-                    value="{{ request('from') }}"
-                    required
-                    class="w-full border rounded p-2"
-                    placeholder="Ville ou adresse de départ">
+    {{-- ============================
+         SEARCH FORM
+       ============================ --}}
+    <div class="card search-card">
+        <h2 class="section-title">Filtres</h2>
+
+        <form method="GET" action="{{ route('trips.search') }}" class="search-form">
+
+            <div class="form-group">
+                <label>Adresse d'arrêt :</label>
+                <input type="text" name="address" value="{{ request('address') }}">
             </div>
 
-            <div>
-                <label class="block font-medium">Arrivée</label>
-                <input
-                    type="text"
-                    name="to"
-                    value="{{ request('to') }}"
-                    required
-                    class="w-full border rounded p-2"
-                    placeholder="Ville ou adresse d’arrivée">
+            <div class="form-group">
+                <label>Date de départ minimale :</label>
+                <input type="date" name="date_from" value="{{ request('date_from') }}">
             </div>
 
-            <div>
-                <label class="block font-medium">Date (optionnelle)</label>
-                <input
-                    type="date"
-                    name="date"
-                    value="{{ request('date') }}"
-                    class="w-full border rounded p-2">
+            <div class="form-group">
+                <label>Date d'arrivée maximale :</label>
+                <input type="date" name="date_to" value="{{ request('date_to') }}">
             </div>
 
-            <button type="submit"
-                    class="bg-blue-600 text-white px-4 py-2 rounded">
-                Rechercher
-            </button>
+            <div class="form-group">
+                <label>Places minimum :</label>
+                <input type="number" name="min_seats" min="1" value="{{ request('min_seats') }}">
+            </div>
+
+            <div class="form-group">
+                <label>Actif :</label>
+                <select name="active">
+                    <option value="">Tous</option>
+                    <option value="1" @selected(request('active') === "1")>Actif</option>
+                    <option value="0" @selected(request('active') === "0")>Inactif</option>
+                </select>
+            </div>
+
+            <button class="btn search-btn">Rechercher</button>
         </form>
-
-        {{-- RÉSULTATS --}}
-        @isset($trips)
-
-            <h2 class="text-lg font-semibold mb-4">
-                Résultats ({{ $trips->count() }})
-            </h2>
-
-            @forelse ($trips as $trip)
-                <div class="border rounded p-4 mb-4">
-
-                    <p><strong>Conducteur :</strong> {{ $trip->proposal->user->name }}</p>
-                    <p><strong>Véhicule :</strong> {{ $trip->proposal->vehicle->brand ?? '' }} {{ $trip->proposal->vehicle->model ?? '' }}</p>
-                    <p><strong>Places disponibles :</strong> {{ $trip->available_seats }}</p>
-
-                    <p class="mt-2 font-medium">Étapes :</p>
-                    <ul class="list-disc list-inside">
-                        @foreach ($trip->stops as $stop)
-                            <li>
-                                {{ $stop->address }} —
-                                Départ : {{ \Carbon\Carbon::parse($stop->departure_time)->format('d/m/Y H:i') }}
-                            </li>
-                        @endforeach
-                    </ul>
-
-                   <a href="{{ route('trips.show', ['trip' => $trip->id]) }}">Voir le trajet</a>
-
-                </div>
-            @empty
-                <p>Aucun trajet ne correspond à votre recherche.</p>
-            @endforelse
-
-        @endisset
-
     </div>
+
+
+
+    {{-- ============================
+         SEARCH RESULTS
+       ============================ --}}
+    <h2 class="section-title">Résultats</h2>
+
+    @if ($trips->isEmpty())
+        <p>Aucun trajet trouvé.</p>
+    @else
+        <table class="trip-table">
+            <thead>
+            <tr>
+                <th>Trip ID</th>
+                <th>Destination finale</th>
+                <th>Conducteur</th>
+                <th>Véhicule</th>
+                <th>Places</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            @foreach ($trips as $trip)
+                @php
+                    $last = $trip->stops->sortBy('order')->last();
+                    $proposal = $trip->proposal;
+                @endphp
+
+                <tr>
+                    <td>{{ $trip->id }}</td>
+
+                    <td>
+                        {{ $last->address }} — {{ $last->arrival_time }}
+                    </td>
+
+                    <td>{{ $proposal->user->last_name }} {{ $proposal->user->first_name }}</td>
+
+                    <td>
+                        {{ $proposal->vehicle->brand }}
+                        {{ $proposal->vehicle->model }}
+                        ({{ $proposal->vehicle->license_plate }})
+                    </td>
+
+                    <td>{{ $trip->available_seats }}</td>
+
+                    <td>
+                        @if($trip->is_active)
+                            <span class="text-success">Actif</span>
+                        @else
+                            <span class="text-danger">Inactif</span>
+                        @endif
+                    </td>
+
+                    <td>
+                        <a class="btn" href="{{ route('trips.show', $trip) }}">Voir</a>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    @endif
+
+
 </x-app-layout>

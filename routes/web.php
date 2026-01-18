@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\ReservationController;
 
 
 Route::get('/', function () {
@@ -57,7 +58,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/trips/{trip}', [TripController::class, 'show'])->name('trips.show');
 
     // Update a trip by cancelling it
-    Route::patch('/trips/{trip}/deactivate', [TripController::class, 'deactivate'])->name('trips.deactivate');
+    Route::patch('/trips/{trip}/cancel', [TripController::class, 'cancel'])->name('trips.cancel');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/reservations', [ReservationController::class, 'store'])
+        ->name('reservations.store');
+
+    Route::delete('/reservations/{reservation}', [ReservationController::class, 'destroy'])
+        ->name('reservations.destroy');
+
 });
 
 

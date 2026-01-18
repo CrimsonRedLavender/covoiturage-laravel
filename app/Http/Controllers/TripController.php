@@ -79,63 +79,89 @@ class TripController extends Controller
             ->with('success', 'Trajet créé avec succès !');
     }
 
-    public function deactivate(Trip $trip)
+    public function cancel(Trip $trip)
     {
-        if ($trip->proposal->user_id !== auth()->id()) { abort(403); }
+        if ($trip->proposal->user_id !== auth()->id()) {
+            abort(403);
+        }
         $trip->update(["is_active" => false]);
 
-        return redirect()->route('trips.my')->with('success', 'Trajet annulé.');
+        return redirect()->route('trips.show')->with('success', 'Trajet annulé.');
     }
 
     public function search(Request $request)
     {
-        // 1. Si aucun critère → afficher seulement le formulaire
-        if (!$request->hasAny(['from', 'to', 'date'])) {
-            return view('trips.search');
+        // Extract filters
+        $stopAddress = $request->input('address');
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $minSeats = $request->input('min_seats');
+        $active = $request->input('active'); // "1" or "0"
+
+        // If no filters → return last 50 trips
+        $noFilters =
+            !$stopAddress &&
+            !$dateFrom &&
+            !$dateTo &&
+            !$minSeats &&
+            $active === null;
+
+        if ($noFilters) {
+            $trips = Trip::with(['stops', 'proposal.vehicle', 'proposal.user'])
+                ->whereHas('proposal') // ensure proposal exists
+                ->orderBy('id', 'desc')
+                ->take(50)
+                ->get();
+
+            return view('trips.search', compact('trips'));
         }
 
-        // 2. Validation uniquement après soumission
-        if ($request->hasAny(['from', 'to'])) {
-            $request->validate([
-                'from' => 'required|string|max:255',
-                'to'   => 'required|string|max:255',
-                'date' => 'nullable|date',
-            ]);
-        }
-
-        // 3. Requête de recherche
+        // Start query
         $query = Trip::query()
-            ->where('is_active', true)
-            ->where('available_seats', '>', 0)
-            ->whereHas('stops', function ($q) use ($request) {
-                // Recherche dans les arrêts correspondants aux adresses de départ et d'arrivée en insensible à la casse
-                if ($request->has('from')) {
-                    $q->whereRaw('LOWER(address) LIKE ?', ['%' . strtolower($request->from) . '%']); // Recherche insensible à la casse pour départ
-                }
-                if ($request->has('to')) {
-                    $q->orWhereRaw('LOWER(address) LIKE ?', ['%' . strtolower($request->to) . '%']); // Recherche insensible à la casse pour arrivée
-                }
-            })
-            ->with(['stops', 'proposal.vehicle', 'proposal.user']);
+            ->with(['stops', 'proposal.vehicle', 'proposal.user'])
+            ->whereHas('proposal'); // ensure proposal exists
 
-        // Filtrer par date si renseignée
-        if ($request->filled('date')) {
-            $query->whereHas('stops', function ($q) use ($request) {
-                $q->whereDate('departure_time', $request->date);
+        // Filter by stop address
+        if ($stopAddress) {
+            $query->whereHas('stops', function ($q) use ($stopAddress) {
+                $q->where('address', 'LIKE', '%' . strtolower($stopAddress) . '%');
             });
         }
 
-        // Récupérer les résultats
+        // Filter by date range
+        if ($dateFrom) {
+            $query->whereHas('stops', function ($q) use ($dateFrom) {
+                $q->whereDate('departure_time', '>=', $dateFrom);
+            });
+        }
+
+        if ($dateTo) {
+            $query->whereHas('stops', function ($q) use ($dateTo) {
+                $q->whereDate('arrival_time', '<=', $dateTo);
+            });
+        }
+
+        // Filter by minimum seats
+        if ($minSeats) {
+            $query->where('available_seats', '>=', $minSeats);
+        }
+
+        // Filter by active/inactive
+        if ($active !== null) {
+            $query->where('is_active', $active);
+        }
+
+        // Execute
         $trips = $query->get();
 
-        return view('trips.search', [
-            'trips' => $trips,
-        ]);
+        return view('trips.search', compact('trips'));
     }
-public function show(Trip $trip)
-{
-    $trip->load(['stops', 'proposal.vehicle', 'proposal.user']);
 
-    return view('trips.show', compact('trip'));
-}
+
+
+    public function show(Trip $trip)
+    {
+        $trip->load(['stops', 'proposal.vehicle', 'reservations']);
+        return view('trips.show', ['trip' => $trip]);
+    }
 }
