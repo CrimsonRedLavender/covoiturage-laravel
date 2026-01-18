@@ -56,14 +56,12 @@
                     </form>
                 @endcan
 
-                {{-- PASSENGER: Not reserved -> Subscribe --}}
-                @can('subscribe-trip', $trip)
-                    <form action="{{ route('reservations.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="trip_id" value="{{ $trip->id }}">
-                        <button class="btn" style="width: 100%;">S'inscrire</button>
-                    </form>
-                @endcan
+                {{-- Passagers --}}
+                <form action="{{ route('reservations.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+                    <button class="btn" style="width: 100%;">S'inscrire</button>
+                </form>
             @endif
 
         </div>

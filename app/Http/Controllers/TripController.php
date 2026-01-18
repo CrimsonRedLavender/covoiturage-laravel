@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Trip;
 use App\Models\Stop;
 use App\Models\Proposal;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 
 class TripController extends Controller
 {
+    /**
+     * Affiche les trajets de l'utilisateur
+     */
     public function index()
     {
         $user = Auth::user();
@@ -20,37 +26,60 @@ class TripController extends Controller
         return view('trips.index', ['reservations' => $reservations, 'proposals' => $proposals]);
     }
 
+    /**
+     * Affiche le formulaire de proposition d'un trajet
+     */
     public function create()
     {
         $vehicles = Auth::user()->vehicles;
+
         return view('trips.create', ['vehicles' => $vehicles]);
     }
 
+    /**
+     * Traite le formulaire de proposition d'un trajet
+     */
     public function store(Request $request)
     {
-        // -------------------------
-        // 1. VALIDATION
-        // -------------------------
+        // Récupérer le véhicule du trajet pour valider le nombre de places max
+        $vehicle = Vehicle::findOrFail($request->vehicle_id);
+        $maxSeats = $vehicle->seats - 1;
+
         $validated = $request->validate([
-            'vehicle_id' => 'required|exists:vehicles,id',
-            'available_seats' => 'required|integer|min:1',
+            'vehicle_id' => 'required|exists:vehicles,id', // exists vérifie si l'id existe dans la table véhicule
+            'available_seats' => "required|integer|min:1|max:{$maxSeats}",
             'comment' => 'nullable|string|max:200',
             'stops' => 'required|array|min:1|max:10',
-            'stops.*.address' => 'required|string|max:255',
+            'stops.*.address' => 'required|string|max:255', // * sélectionne tous les éléments de la collection
             'stops.*.departure_time' => 'required|date',
             'stops.*.arrival_time' => 'required|date|after_or_equal:stops.*.departure_time',
         ]);
 
-        // -------------------------
-        // 2. CREATE TRIP
-        // -------------------------
+        // Validation manuelle des horaires des étapes (qui doivent être après l'étape précédente)
+
+        $previousArrival = null;
+
+        // Chaque stop a son $index dans le tableau et sa valeur $stop
+        foreach ($validated['stops'] as $index => $stop) {
+            $currentDeparture = strtotime($stop['departure_time']);
+
+            // Envoie erreur si le départ de l'étape est avant l'arrivée de la précédente
+            if ($previousArrival !== null && $currentDeparture < $previousArrival) {
+                return back()
+                    ->withErrors([
+                        "stops.$index.departure_time" =>
+                            "L'horaire de départ de cette étape doit être après l'arrivée du précédent."
+                    ])
+                    ->withInput(); // restore les données du formulaire
+            }
+
+            $previousArrival = strtotime($stop['arrival_time']);
+        }
+
         $trip = Trip::create([
             'available_seats' => $validated['available_seats'],
         ]);
 
-        // -------------------------
-        // 3. CREATE PROPOSAL
-        // -------------------------
         $proposal = Proposal::create([
             'trip_id' => $trip->id,
             'vehicle_id' => $validated['vehicle_id'],
@@ -58,47 +87,47 @@ class TripController extends Controller
             'comment' => $validated['comment'] ?? null,
         ]);
 
-        // -------------------------
-        // 4. CREATE STOPS
-        // -------------------------
         foreach ($validated['stops'] as $index => $stopData) {
             Stop::create([
                 'trip_id' => $trip->id,
-                'order' => $index + 1,
+                'order' => $index + 1, // ordre de l'étape en fonction de la position dans le tableau
                 'address' => $stopData['address'],
                 'departure_time' => $stopData['departure_time'],
                 'arrival_time' => $stopData['arrival_time'],
             ]);
         }
 
-        // -------------------------
-        // 5. REDIRECT
-        // -------------------------
         return redirect()
             ->route('trips.my')
-            ->with('success', 'Trajet créé avec succès !');
+            ->with('success', 'Trajet créé.');
     }
 
+    /**
+     * Annule un trajet (pas de suppression !!!)
+     */
     public function cancel(Trip $trip)
     {
-        if ($trip->proposal->user_id !== auth()->id()) {
-            abort(403);
-        }
+        // Seul le proposeur peut annuler le trajet
+        Gate::authorize('cancel-trip', $trip);
+
         $trip->update(["is_active" => false]);
 
         return redirect()->route('trips.show')->with('success', 'Trajet annulé.');
     }
 
+    /**
+     * affiche et traite la recherche de trajet
+     */
     public function search(Request $request)
     {
-        // Extract filters
+        // Récupérer les données de recherche
         $stopAddress = $request->input('address');
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
         $minSeats = $request->input('min_seats');
-        $active = $request->input('active'); // "1" or "0"
+        $active = $request->input('active'); // string "1" ou "0", null sinon
 
-        // If no filters → return last 50 trips
+        // Check si il y a des données de recherche
         $noFilters =
             !$stopAddress &&
             !$dateFrom &&
@@ -106,9 +135,10 @@ class TripController extends Controller
             !$minSeats &&
             $active === null;
 
+        // Renvoie les 50 derniers trajets si le formulaire de recherche est vide
         if ($noFilters) {
             $trips = Trip::with(['stops', 'proposal.vehicle', 'proposal.user'])
-                ->whereHas('proposal') // ensure proposal exists
+                ->whereHas('proposal') // vérifie que le trajet a une proposition
                 ->orderBy('id', 'desc')
                 ->take(50)
                 ->get();
@@ -116,49 +146,51 @@ class TripController extends Controller
             return view('trips.search', compact('trips'));
         }
 
-        // Start query
+        // Créé la query pour chercher les étapes correspondants à la rechercheS
         $query = Trip::query()
             ->with(['stops', 'proposal.vehicle', 'proposal.user'])
-            ->whereHas('proposal'); // ensure proposal exists
+            ->whereHas('proposal');
 
-        // Filter by stop address
+        // Adresse de l'étape
         if ($stopAddress) {
             $query->whereHas('stops', function ($q) use ($stopAddress) {
                 $q->where('address', 'LIKE', '%' . strtolower($stopAddress) . '%');
             });
         }
 
-        // Filter by date range
+        // Date (borne inférieure)
         if ($dateFrom) {
             $query->whereHas('stops', function ($q) use ($dateFrom) {
                 $q->whereDate('departure_time', '>=', $dateFrom);
             });
         }
 
+        // Date (borne supérieure)
         if ($dateTo) {
             $query->whereHas('stops', function ($q) use ($dateTo) {
                 $q->whereDate('arrival_time', '<=', $dateTo);
             });
         }
 
-        // Filter by minimum seats
+        // Nombre de sièges dispos minimum
         if ($minSeats) {
             $query->where('available_seats', '>=', $minSeats);
         }
 
-        // Filter by active/inactive
+        // Le trajet est actif/inactif
         if ($active !== null) {
             $query->where('is_active', $active);
         }
 
-        // Execute
+        // Exécuter la query
         $trips = $query->get();
 
-        return view('trips.search', compact('trips'));
+        return view('trips.search', ['trips' => $trips]);
     }
 
-
-
+    /**
+     * Affiche les détails d'un seul trajet
+     */
     public function show(Trip $trip)
     {
         $trip->load(['stops', 'proposal.vehicle', 'reservations']);

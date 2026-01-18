@@ -20,21 +20,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Trip Gates
         Gate::define('cancel-trip', function ($user, $trip) {
             return $user->id === $trip->proposal->user_id;
         });
 
         Gate::define('subscribe-trip', function ($user, $trip) {
-            return $user->id !== $trip->proposal->user_id
-                && !$trip->reservations->contains('user_id', $user->id);
+            return $user->id !== $trip->proposal->user_id // ne peut pas s'inscrire à sa propre proposition
+                && !$trip->reservations->contains('user_id', $user->id); // ne s'est pas déjà inscrit
         });
 
         Gate::define('unsubscribe-trip', function ($user, $trip) {
-            return $trip->reservations->contains('user_id', $user->id);
+            return $trip->reservations->contains('user_id', $user->id); // si il a réserver le trajet
         });
 
-        Gate::define('viewPassengers-trip', function ($user, $trip) {
-            return $user->id === $trip->proposal->user_id;
+        // Vehicule Gates
+        Gate::define('manage-vehicle', function ($user, $vehicle) {
+            return $vehicle->user_id === $user->id;
         });
 
     }

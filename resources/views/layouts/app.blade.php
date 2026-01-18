@@ -38,13 +38,13 @@
 @endif
 
 
-<div class="container">
+<main class="container">
     <header>
         <h1>{{ $title ?? '' }}</h1>
     </header>
 
     {{ $slot }}
-</div>
+</main>
 
 
 <footer>

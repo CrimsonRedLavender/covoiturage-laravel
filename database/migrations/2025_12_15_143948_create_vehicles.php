@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('color');
             $table->foreignIdFor(\App\Models\User::class)
             ->constrained('users', 'id')
-            ->cascadeOnDelete();// Sinon trop relou
+            ->cascadeOnDelete();
         });
 
     }

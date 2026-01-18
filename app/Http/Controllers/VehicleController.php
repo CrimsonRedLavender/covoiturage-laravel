@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 /*
 To eager load (load related models),
@@ -15,23 +16,36 @@ To eager load (load related models),
 
 class VehicleController extends Controller
 {
+    /**
+     * Affiche les véhicules de l'utilisateur
+     */
     public function index()
     {
+        // Récupérer les véhicules de l'utilisateur
         $vehicles = Auth::user()->vehicles;
+
         return view('vehicles.index', ['vehicles' => $vehicles]);
     }
 
+    /**
+     * Affiche formulaire création
+     */
     public function create()
     {
         return view('vehicles.create');
     }
 
+    /**
+     * Affiche formulaire modification
+     */
     public function edit(Vehicle $vehicle)
     {
-        if ($vehicle->user_id !== Auth::id()) abort(403);
         return view('vehicles.edit', ['vehicle' => $vehicle]);
     }
 
+    /**
+     * Traite la création
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -53,14 +67,17 @@ class VehicleController extends Controller
         return redirect()->route('vehicles.my')->with('success', 'Véhicule ajouté avec succès.');
     }
 
+    /**
+     * Traite la modification
+     */
     public function update(Request $request, Vehicle $vehicle)
     {
-        if ($vehicle->user_id !== Auth::id()) abort(403);
+        Gate::authorize('manage-vehicle', $vehicle);
 
         $request->validate([
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
-            'seats' => 'required|integer|min:1',
+            'seats' => 'required|integer|min:1|max:500',
             'license_plate' => 'required|string|max:255',
             'color' => 'required|string|max:255',
         ]);
@@ -76,14 +93,20 @@ class VehicleController extends Controller
         return redirect()->route('vehicles.my')->with('success', 'Véhicule mis à jour.');
     }
 
-
+    /**
+     * Traite la suppression
+     */
     public function destroy(Vehicle $vehicle)
     {
-        if ($vehicle->user_id !== Auth::id()) abort(403);
+        Gate::authorize('manage-vehicle', $vehicle);
+
+        // Empeche la suppression si le véhicule est utilisé dans un trajet
         if ($vehicle->proposals()->exists()) {
             return back()->with('error', 'Ce véhicule est utilisé dans un trajet et ne peut pas être supprimé.');
         }
+
         $vehicle->delete();
+
         return redirect()->route('vehicles.my')->with('success', 'Véhicule supprimé.');
     }
 }

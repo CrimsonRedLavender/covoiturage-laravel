@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Trip;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
     /**
-     * Subscribe to a trip
+     * S'inscrire à un trajet
      */
     public function store(Request $request)
     {
@@ -18,56 +19,45 @@ class ReservationController extends Controller
             'trip_id' => 'required|exists:trips,id',
         ]);
 
-        $trip = Trip::findOrFail($request->trip_id);
+        $trip = Trip::find($request->trip_id) ?? abort(404);
 
-        // Prevent driver from subscribing
-        if ($trip->proposal->user_id === Auth::id()) {
-            abort(403, 'Vous ne pouvez pas vous inscrire à votre propre trajet.');
-        }
+        // L'utilisateur ne peut pas s'inscrire à sa propre proposition et n'est pas déjà inscrit au trajet
+        Gate::authorize('subscribe-trip', $trip);
 
-        // Prevent duplicate reservation
-        if ($trip->reservations()->where('user_id', Auth::id())->exists()) {
-            return back()->with('error', 'Vous êtes déjà inscrit à ce trajet.');
-        }
-
-        // Prevent subscribing to inactive trip
+        // Ne peut pas s'inscire à un trajet inactif
         if (!$trip->is_active) {
-            return back()->with('error', 'Ce trajet est inactif.');
+            return back()->with('error', "Impossible de s'inscrire : Ce trajet est inactif.");
         }
 
-        // Prevent subscribing if no seats left
+        // Ne peut pas s'inscrire si plus de places disponibles
         if ($trip->available_seats <= 0) {
-            return back()->with('error', 'Plus aucune place disponible.');
+            return back()->with('error', "Impossible de s'inscrire : Plus aucune place disponible.");
         }
 
-        // Create reservation
         Reservation::create([
             'trip_id' => $trip->id,
             'user_id' => Auth::id(),
         ]);
 
-        // Decrease available seats
+        // Décrémenter les places dispos
         $trip->decrement('available_seats');
 
-        return back()->with('success', 'Vous êtes inscrit au trajet.');
+        return back()->with('success', 'Vous vous êtes inscrit au trajet.');
     }
 
     /**
-     * Unsubscribe from a trip
+     * Se désinscrire à un trajet
      */
     public function destroy(Reservation $reservation)
     {
-        // Only the owner of the reservation can delete it
-        if ($reservation->user_id !== Auth::id()) {
-            abort(403);
-        }
-
         $trip = $reservation->trip;
 
-        // Delete reservation
+        // Seul le réserveur peut supprimer sa réservation
+        Gate::authorize('subscribe-trip', $trip);
+
         $reservation->delete();
 
-        // Increase available seats
+        // Incrémenter les places disposs
         $trip->increment('available_seats');
 
         return back()->with('success', 'Vous vous êtes désinscrit du trajet.');
