@@ -1,6 +1,9 @@
 <x-app-layout>
 
-    <h1 class="page-title">Détails du trajet</h1>
+    <x-slot:title>
+        Détails d'un trajet
+    </x-slot>
+
 
 
     <div class="card-row">

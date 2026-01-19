@@ -1,10 +1,8 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <h1>Modifier un véhicule</h1>
+    <x-slot:title>
+        Modifier un véhicule
     </x-slot>
-
-    <h2>Modifier le véhicule</h2>
 
     <form action="{{ route('vehicles.update', $vehicle->id) }}" method="POST">
         @csrf

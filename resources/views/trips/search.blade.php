@@ -1,6 +1,8 @@
 <x-app-layout>
 
-    <h1 class="page-title">Rechercher un trajet</h1>
+    <x-slot:title>
+        Rechercher un trajet
+    </x-slot>
 
     {{-- Formulaire de recherche --}}
     <div class="card search-card">

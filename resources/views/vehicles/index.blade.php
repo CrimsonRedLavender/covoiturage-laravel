@@ -1,5 +1,9 @@
 <x-app-layout>
 
+    <x-slot:title>
+        Gérer mes véhicules
+    </x-slot>
+
     <a class="btn" href="{{ route('vehicles.create') }}">Ajouter un véhicule</a>
 
     <table>

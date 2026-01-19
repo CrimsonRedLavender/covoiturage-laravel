@@ -1,4 +1,9 @@
 <x-app-layout>
+
+    <x-slot:title>
+        Proposer un trajet
+    </x-slot>
+
     <form action="{{ route('trips.store') }}" method="POST">
         @csrf
 

@@ -11,12 +11,47 @@
         <ul class="links">
 
             @auth
-                <li><a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Tableau de bord</a></li>
-                <li><a href="{{ route('vehicles.my') }}">Gérer mes véhicules</a></li>
-                <li><a href="{{ route('trips.my') }}">Gérer mes trajets</a></li>
-                <li><a href="{{ route('trips.create') }}">Proposer un trajet</a></li>
-                <li><a href="{{ route('trips.search') }}">Rechercher un trajet</a></li>
-                <li><a href="{{ route('profile.edit') }}">Mon profil</a></li>
+                <li>
+                    <a href="{{ route('dashboard') }}"
+                       class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        Tableau de bord
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('vehicles.my') }}"
+                       class="{{ request()->routeIs('vehicles.*') ? 'active' : '' }}">
+                        Gérer mes véhicules
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('trips.my') }}"
+                       class="{{ request()->routeIs('trips.*') ? 'active' : '' }}">
+                        Gérer mes trajets
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('trips.create') }}"
+                       class="{{ request()->routeIs('trips.create') ? 'active' : '' }}">
+                        Proposer un trajet
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('trips.search') }}"
+                       class="{{ request()->routeIs('trips.search') ? 'active' : '' }}">
+                        Rechercher un trajet
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('profile.edit') }}"
+                       class="{{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                        Mon profil
+                    </a>
+                </li>
 
                 <li>
                     <form method="POST" action="{{ route('logout') }}" style="display:inline;">
@@ -29,10 +64,10 @@
                 </li>
 
             @else
-                <li><a href="{{ route('login') }}">Se connecter</a></li>
+                <li><a href="{{ route('login') }}" class="{{ request()->routeIs('login') ? 'active' : '' }}">Se connecter</a></li>
 
                 @if (Route::has('register'))
-                    <li><a href="{{ route('register') }}">Créer un compte</a></li>
+                    <li><a href="{{ route('register') }}" class="{{ request()->routeIs('register') ? 'active' : '' }}">Créer un compte</a></li>
                 @endif
             @endauth
 

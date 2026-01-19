@@ -1,6 +1,8 @@
 <x-app-layout>
 
-    <h1 class="page-title">Gestion de vos trajets</h1>
+    <x-slot:title>
+        Gérer mes trajets
+    </x-slot>
 
     {{-- ========================= --}}
     {{--         RÉSERVATIONS      --}}

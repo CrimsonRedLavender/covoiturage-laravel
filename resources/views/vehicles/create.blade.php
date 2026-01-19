@@ -1,10 +1,8 @@
 <x-app-layout>
 
-    <x-slot name="header">
-        <h1>Créer un véhicule</h1>
+    <x-slot:title>
+        Ajouter un véhicule
     </x-slot>
-
-    <h2>Ajouter un nouveau véhicule</h2>
 
     <form action="{{ route('vehicles.store') }}" method="POST">
         @csrf
