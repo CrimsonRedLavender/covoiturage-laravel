@@ -191,6 +191,17 @@ button:hover, .btn:hover {
     color: white;
 }
 
+/* Danger button */
+.btn-danger {
+    background: #c62828;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #8e1c1c;
+}
+
+
 /* ------------------------------
    TABLES
 --------------------------------*/
