@@ -112,7 +112,7 @@ class TripController extends Controller
 
         $trip->update(["is_active" => false]);
 
-        return redirect()->route('trips.show')->with('success', 'Trajet annulé.');
+        return redirect()->route('trips.show', $trip)->with('success', 'Trajet annulé.');
     }
 
     /**
@@ -133,7 +133,7 @@ class TripController extends Controller
             !$dateFrom &&
             !$dateTo &&
             !$minSeats &&
-            $active === null;
+            $active === null; // !$active renvoie true si $active = "0"
 
         // Renvoie les 50 derniers trajets si le formulaire de recherche est vide
         if ($noFilters) {
