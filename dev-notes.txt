@@ -44,7 +44,4 @@ Delete resource	destroy()	Delete vehicle
 
 
 A faire:
-- changer ui de page de connexion, page d'accueil unlogged, page de modif du compte
-- améliorer css
 - redirection to dashboard si loggé, sinon reste accueil
-- tester l'appli

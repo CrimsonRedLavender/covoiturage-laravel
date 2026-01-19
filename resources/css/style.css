@@ -2,6 +2,25 @@
    GLOBAL RESET
 --------------------------------*/
 
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+
+/* Fix Breeze overflow */
+input.block, input.w-full {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    display: block !important;
+}
+
+/* Remove leftover Tailwind spacing */
+input.mt-1 {
+    margin-top: 5px !important;
+}
+
+
 h1, h2, h3, h4, h5, h6 {
     font-weight: 200;
 }
@@ -11,6 +30,7 @@ html, body {
 }
 
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
     background: #f5f5f5;
     color: #333;
@@ -20,7 +40,7 @@ body {
 }
 
 main {
-    flex: 1; /* pushes footer to the bottom */
+    flex: 1;
 }
 
 /* ------------------------------
@@ -38,7 +58,7 @@ main {
 nav {
     background: #004aad;
     padding: 10px 20px;
-    display: flex; /* make nav the flex container */
+    display: flex;
     justify-content: space-between;
     align-items: center;
 }
@@ -69,8 +89,7 @@ nav ul {
     padding: 0;
     display: flex;
     gap: 30px;
-    white-space: nowrap; /* prevent wrapping */
-
+    white-space: nowrap;
 }
 
 nav ul li a {
@@ -106,10 +125,70 @@ nav ul li a.active::after {
 }
 
 /* ------------------------------
-   HEADER
+   WELCOME PAGE (scoped)
 --------------------------------*/
-header h1 {
-    margin-bottom: 20px;
+
+.welcome-hero {
+    max-width: 800px;
+    margin: 80px auto;
+    text-align: center;
+    padding: 0 20px;
+    font-family: "Instrument Sans", sans-serif;
+}
+
+.welcome-hero h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #004aad;
+}
+
+.welcome-hero p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* ------------------------------
+   BUTTONS
+--------------------------------*/
+button, .btn {
+    background: #004aad;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+button:hover, .btn:hover {
+    background: #00337a;
+}
+
+.btn-primary {
+    background: #004aad;
+}
+
+.btn-primary:hover {
+    background: #003a87;
+}
+
+.btn-outline {
+    border: 2px solid #004aad;
+    color: #004aad;
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: #004aad;
+    color: white;
 }
 
 /* ------------------------------
@@ -133,48 +212,8 @@ table th {
 }
 
 /* ------------------------------
-   BUTTONS
---------------------------------*/
-button, .btn {
-    background: #004aad;
-    color: white;
-    padding: 8px 14px;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    border-radius: 4px;
-}
-
-button:hover, .btn:hover {
-    background: #00337a;
-}
-
-/* Delete button */
-
-.btn-danger {
-    background: #c62828;
-}
-
-.btn-danger:hover {
-    background: #8e1c1c;
-}
-
-/* Informative text (trip index) */
-
-.text-success {
-    color: #198754; /* green */
-}
-
-.text-danger {
-    color: #dc3545; /* red */
-}
-
-
-/* ------------------------------
    ALERTS
 --------------------------------*/
-
 .alert {
     padding: 12px 15px;
     margin: 15px 0;
@@ -202,7 +241,12 @@ form label {
     font-weight: bold;
 }
 
-form input, form select {
+/* Narrow the generic input rule so it doesn't affect checkboxes */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="tel"], form input[type="number"],
+form select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
@@ -223,6 +267,15 @@ form button {
     margin-top: 20px;
 }
 
+.input-textarea {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+
 /* ------------------------------
    FOOTER
 --------------------------------*/
@@ -234,16 +287,18 @@ footer {
     text-align: center;
 }
 
+/* ------------------------------
+   CARDS & DASHBOARD
+--------------------------------*/
 .card {
     background: white;
     padding: 16px;
-    border: 1px solid #ddd; /* border */
+    border: 1px solid #ddd;
     border-radius: 8px;
     margin-bottom: 24px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* subtle shadow */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Two cards per row */
 .card-row {
     display: flex;
     gap: 20px;
@@ -251,83 +306,13 @@ footer {
 }
 
 .card-half {
-    flex: 1; /* each card takes half the row */
+    flex: 1;
 }
 
-/* Titles */
 .section-title {
     margin-bottom: 10px;
     text-align: center;
 }
-
-/* Timeline */
-.timeline {
-    border-left: 3px solid #444;
-    padding-left: 16px;
-    margin-left: 6px;
-}
-
-.timeline-item {
-    margin-bottom: 20px;
-}
-
-/* Passenger list */
-.passenger {
-    margin-bottom: 12px;
-}
-
-/* Page title */
-.page-title {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-/* Status colors */
-.text-success {
-    color: #198754;
-}
-
-.text-danger {
-    color: #dc3545;
-}
-
-/* Search card layout */
-.search-card {
-    margin-bottom: 30px;
-}
-
-/* Search form layout */
-.search-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    width: 220px;
-}
-
-.search-btn {
-    margin-top: 10px;
-}
-
-.trip-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.trip-table th,
-.trip-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-}
-
-
-/* Dashboard stats styles */
 
 .card-border-success {
     border-left: 6px solid #198754;
@@ -367,11 +352,24 @@ footer {
     color: #8e1c1c;
 }
 
-.input-textarea {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-    resize: vertical;
+input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+    margin-top: 0;
+    border: none;
+}
+
+/* Remember row layout */
+.remember-row {
+    display: flex;
+    align-items: center; /* vertical alignment */
+    gap: 8px;
+    margin-top: 10px;
+}
+
+/* Make sure checkbox doesn't stretch */
+.remember-row input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    padding: 0;
 }
