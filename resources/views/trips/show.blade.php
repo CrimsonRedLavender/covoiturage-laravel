@@ -88,9 +88,14 @@
         <div class="card card-half">
             <h2 class="section-title">Conducteur</h2>
 
-            <p><strong>Nom :</strong>{{ $trip->proposal->user->last_name }} {{ $trip->proposal->user->first_name }}</p>
+            <p><strong>Nom :</strong> {{ $trip->proposal->user->last_name }} {{ $trip->proposal->user->first_name }}</p>
 
             <p><strong>Commentaire :</strong> {{ $trip->proposal->comment ?? 'Aucun commentaire.' }}</p>
+
+            <p><strong>Email :</strong> {{ $trip->proposal->user->email }}</p>
+
+            <p><strong>Téléphone :</strong> {{ $trip->proposal->user->mobile }}</p>
+
         </div>
 
     </div>

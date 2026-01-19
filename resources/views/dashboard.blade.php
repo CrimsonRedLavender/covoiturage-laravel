@@ -3,7 +3,7 @@
 
     <div class="container">
 
-        <h2 class="page-title">Dashboard</h2>
+        <h2 class="page-title">Tableau de bord</h2>
 
         <div class="card-row">
 

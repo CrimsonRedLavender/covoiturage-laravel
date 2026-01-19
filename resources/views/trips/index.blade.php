@@ -3,7 +3,7 @@
     <h1 class="page-title">Gestion de vos trajets</h1>
 
     {{-- ========================= --}}
-    {{--        MES RÉSERVATIONS   --}}
+    {{--         RÉSERVATIONS      --}}
     {{-- ========================= --}}
     <h2>Mes réservations</h2>
 
@@ -34,7 +34,8 @@
                 <tr>
                     <td>{{ $trip->id }}</td>
 
-                    <td>{{ $last->address }} — {{ $last->arrival_time }}</td>
+                    <td>  <p><strong>Adresse :</strong> {{ $last->address }} </p>
+                          <p><strong>Arrivée le :</strong> {{ $last->arrival_time }} </p></td>
 
                     <td>{{ $proposal->user->last_name }} {{ $proposal->user->first_name }}</td>
 
@@ -66,9 +67,9 @@
 
 
     {{-- ========================= --}}
-    {{--     MES TRAJETS PROPOSÉS  --}}
+    {{--         PROPOSITIONS      --}}
     {{-- ========================= --}}
-    <h2 style="margin-top:40px;">Mes trajets proposés</h2>
+    <h2 style="margin-top:60px; margin-bottom:15px">Mes trajets proposés</h2>
 
     <a class="btn" href="{{ route('trips.create') }}">Proposer un trajet</a>
 
@@ -98,7 +99,8 @@
                 <tr>
                     <td>{{ $trip->id }}</td>
 
-                    <td>{{ $last->address }} — {{ $last->arrival_time }}</td>
+                    <td>  <p><strong>Adresse :</strong> {{ $last->address }} </p>
+                          <p><strong>Arrivée le :</strong> {{ $last->arrival_time }} </p></td>
                     <td>
                         {{ $proposal->vehicle->brand }}
                         {{ $proposal->vehicle->model }}

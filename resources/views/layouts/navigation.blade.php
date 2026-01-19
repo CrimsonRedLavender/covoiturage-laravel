@@ -12,7 +12,7 @@
             <li>
                 <a href="{{ route('dashboard') }}"
                    class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    Dashboard
+                    Tableau de bord
                 </a>
             </li>
 
