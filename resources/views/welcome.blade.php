@@ -13,7 +13,7 @@
 
 </head>
 <body>
-<header class="">
+<header>
     @if (Route::has('login'))
         <nav>
             @auth

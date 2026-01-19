@@ -1,9 +1,13 @@
 <nav>
-    <div class="nav-container">
-        <div class="logo">
-            <a href="/">BestMeds Covoiturage</a>
-        </div>
+    <div class="logo">
+        <a href="/dashboard">
+            <img src="{{ Vite::asset('resources/images/logo_bm.png') }}"
+                 alt="BestMeds Covoiturage"
+                 height="60">
+        </a>
+    </div>
 
+    <div class="nav-container">
         <ul class="links">
             <li>
                 <a href="{{ route('dashboard') }}"
@@ -13,13 +17,10 @@
             </li>
 
             <li><a href="{{ route('vehicles.my') }}">Gérer mes véhicules</a></li>
-
             <li><a href="{{ route('trips.my') }}">Gérer mes trajets</a></li>
-
             <li><a href="{{ route('trips.create') }}">Proposer un trajet</a></li>
-
             <li><a href="{{ route('trips.search') }}">Rechercher un trajet</a></li>
-
+            <li><a href="{{ route('profile.edit') }}">Mon profil</a></li>
             <li>
                 <form method="POST" action="{{ route('logout') }}" style="display:inline;">
                     @csrf
@@ -30,8 +31,6 @@
                     </a>
                 </form>
             </li>
-
-            <li><a href="{{ route('profile.edit') }}">Mon profil</a></li>
         </ul>
     </div>
 </nav>

@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>BestMeds - Covoiturage</title>
-    <link rel="stylesheet" href="/public/css/style.css">
     <link rel="stylesheet" href="/css/style.css">
 
     @vite(['resources/css/app.css', 'resources/css/style.css', 'resources/js/app.js'])

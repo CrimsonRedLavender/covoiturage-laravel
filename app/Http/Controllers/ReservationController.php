@@ -53,7 +53,7 @@ class ReservationController extends Controller
         $trip = $reservation->trip;
 
         // Seul le réserveur peut supprimer sa réservation
-        Gate::authorize('subscribe-trip', $trip);
+        Gate::authorize('unsubscribe-trip', $trip);
 
         $reservation->delete();
 

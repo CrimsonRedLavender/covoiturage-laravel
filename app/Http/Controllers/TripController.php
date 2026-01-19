@@ -148,7 +148,7 @@ class TripController extends Controller
 
         // Créé la query pour chercher les étapes correspondants à la rechercheS
         $query = Trip::query()
-            ->with(['stops', 'proposal.vehicle', 'proposal.user'])
+            ->with(['stops', 'proposal.vehicle', 'proposal.user', 'reservations.user'])
             ->whereHas('proposal');
 
         // Adresse de l'étape

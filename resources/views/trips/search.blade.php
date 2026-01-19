@@ -1,12 +1,8 @@
-<x-app-layout :title="'Recherche de trajets'">
-
-    <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
+<x-app-layout>
 
     <h1 class="page-title">Rechercher un trajet</h1>
 
-    {{-- ============================
-         SEARCH FORM
-       ============================ --}}
+    {{-- Formulaire de recherche --}}
     <div class="card search-card">
         <h2 class="section-title">Filtres</h2>
 
@@ -47,9 +43,7 @@
 
 
 
-    {{-- ============================
-         SEARCH RESULTS
-       ============================ --}}
+    {{-- Résultat --}}
     <h2 class="section-title">Résultats</h2>
 
     @if ($trips->isEmpty())
@@ -62,7 +56,8 @@
                 <th>Destination finale</th>
                 <th>Conducteur</th>
                 <th>Véhicule</th>
-                <th>Places</th>
+                <th>Places disponibles</th>
+                <th>Nombre de passagers</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -73,6 +68,7 @@
                 @php
                     $last = $trip->stops->sortBy('order')->last();
                     $proposal = $trip->proposal;
+                    $nbPassengers = $trip->reservations->count();
                 @endphp
 
                 <tr>
@@ -91,6 +87,8 @@
                     </td>
 
                     <td>{{ $trip->available_seats }}</td>
+
+                    <td> {{ $nbPassengers }} </td>
 
                     <td>
                         @if($trip->is_active)

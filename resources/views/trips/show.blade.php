@@ -1,13 +1,11 @@
-<x-app-layout :title="'Détails du trajet #'.$trip->id">
-
-    <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
+<x-app-layout>
 
     <h1 class="page-title">Détails du trajet</h1>
 
 
     <div class="card-row">
 
-        {{-- Trip summary --}}
+        {{-- Résumé --}}
         <div class="card card-half">
             <h2 class="section-title">Résumé du trajet</h2>
 
@@ -33,12 +31,12 @@
                 $isDriver = $user && $user->id === $trip->proposal->user_id;
             @endphp
 
-            {{-- If trip is inactive → show message only --}}
+            {{-- Trajet inactif : aucunes actions --}}
             @if (!$trip->is_active)
-                <p class="text-danger"><strong>Le trajet est inactif</strong></p>
+                <p class="text-danger"><strong>Non disponible : le trajet est inactif.</strong></p>
 
             @else
-                {{-- DRIVER: Deactivate trip --}}
+                {{-- Proposeur : annuler le trajet --}}
                 @can('cancel-trip', $trip)
                     <form action="{{ route('trips.cancel', $trip) }}" method="POST">
                         @csrf
@@ -47,7 +45,7 @@
                     </form>
                 @endcan
 
-                {{-- PASSENGER: Already reserved -> Unsubscribe --}}
+                {{-- Réserveur : se désinscrire --}}
                 @can('unsubscribe-trip', $trip)
                     <form action="{{ route('reservations.destroy', $userReservation) }}" method="POST">
                         @csrf
@@ -70,9 +68,7 @@
     </div>
 
 
-    {{-- ============================
-         VEHICLE + DRIVER
-       ============================ --}}
+    {{-- Véhicule et Conducteur --}}
     <div class="card-row">
 
         <div class="card card-half">
@@ -88,19 +84,15 @@
         <div class="card card-half">
             <h2 class="section-title">Conducteur</h2>
 
-            <p>{{ $trip->proposal->user->last_name }} {{ $trip->proposal->user->first_name }}</p>
+            <p><strong>Nom :</strong>{{ $trip->proposal->user->last_name }} {{ $trip->proposal->user->first_name }}</p>
 
-            @if ($trip->proposal->comment)
-                <p><strong>Commentaire :</strong> {{ $trip->proposal->comment }}</p>
-            @endif
+            <p><strong>Commentaire :</strong> {{ $trip->proposal->comment ?? 'Aucun commentaire.' }}</p>
         </div>
 
     </div>
 
 
-    {{-- ============================
-         STOPS TIMELINE
-       ============================ --}}
+    {{-- Etapes --}}
     <div class="card">
         <h2 class="section-title">Étapes du trajet</h2>
 
@@ -117,9 +109,7 @@
     </div>
 
 
-    {{-- ============================
-         USER RESERVATION
-       ============================ --}}
+    {{-- La réservation de l'utilisateur --}}
     @if ($userReservation)
         <div class="card">
             <h2 class="section-title">Votre réservation</h2>
@@ -134,26 +124,22 @@
 
 
 
-    {{-- ============================
-         PASSENGERS (driver only)
-       ============================ --}}
-    @can('viewPassengers-trip', $trip)
-        <div class="card">
-            <h2 class="section-title">Passagers</h2>
+    {{-- Passagers --}}
+    <div class="card">
+        <h2 class="section-title">Passagers</h2>
 
-            @forelse ($trip->reservations as $reservation)
-                <div class="passenger">
-                    <strong>{{ $reservation->user->last_name }} {{ $reservation->user->first_name }}</strong><br>
-                    @if ($reservation->comment)
-                        <small>Commentaire : {{ $reservation->comment }}</small>
-                    @else
-                        <small>Aucun commentaire.</small>
-                    @endif
-                </div>
-            @empty
-                <p>Aucun passager pour le moment.</p>
-            @endforelse
-        </div>
-    @endcan
+        @forelse ($trip->reservations as $reservation)
+            <div class="passenger">
+                <strong>{{ $reservation->user->last_name }} {{ $reservation->user->first_name }}</strong><br>
+                @if ($reservation->comment)
+                    <small>Commentaire : {{ $reservation->comment }}</small>
+                @else
+                    <small>Aucun commentaire.</small>
+                @endif
+            </div>
+        @empty
+            <p>Aucun passager pour le moment.</p>
+        @endforelse
+    </div>
 
 </x-app-layout>

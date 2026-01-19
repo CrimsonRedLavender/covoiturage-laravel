@@ -7,18 +7,18 @@
 
         <div class="card-row">
 
-            <!-- Active Proposed Trips -->
-            <div class="card card-half" style="border-left: 6px solid #198754;">
-                <h3 class="section-title">Trajets proposés actifs</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: #198754;">
+            <!-- Propositions actives -->
+            <div class="card card-half card-border-success">
+                <h3 class="section-title">Propositions actives</h3>
+                <p class="stat-number stat-success">
                     {{ $activeProposed }}
                 </p>
             </div>
 
-            <!-- Active Reservations -->
-            <div class="card card-half" style="border-left: 6px solid #004aad;">
+            <!-- Réservations actives -->
+            <div class="card card-half card-border-primary">
                 <h3 class="section-title">Réservations actives</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: #004aad;">
+                <p class="stat-number stat-primary">
                     {{ $activeReserved }}
                 </p>
             </div>
@@ -27,18 +27,18 @@
 
         <div class="card-row">
 
-            <!-- Inactive Proposed Trips -->
-            <div class="card card-half" style="border-left: 6px solid #dc3545;">
-                <h3 class="section-title">Trajets proposés inactifs</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: #dc3545;">
+            <!-- Propositions inactives -->
+            <div class="card card-half card-border-danger">
+                <h3 class="section-title">Propositions inactives</h3>
+                <p class="stat-number stat-danger">
                     {{ $inactiveProposed }}
                 </p>
             </div>
 
-            <!-- Inactive Reservations -->
-            <div class="card card-half" style="border-left: 6px solid #8e1c1c;">
+            <!-- Réservations inactives -->
+            <div class="card card-half card-border-darkred">
                 <h3 class="section-title">Réservations inactives</h3>
-                <p style="font-size: 2rem; font-weight: bold; color: #8e1c1c;">
+                <p class="stat-number stat-darkred">
                     {{ $inactiveReserved }}
                 </p>
             </div>
