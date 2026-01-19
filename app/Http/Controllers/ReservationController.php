@@ -15,8 +15,9 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'trip_id' => 'required|exists:trips,id',
+            'comment' => 'nullable|string|max:500',
         ]);
 
         $trip = Trip::find($request->trip_id) ?? abort(404);
@@ -35,8 +36,9 @@ class ReservationController extends Controller
         }
 
         Reservation::create([
-            'trip_id' => $trip->id,
-            'user_id' => Auth::id(),
+            'trip_id' => $validated['trip_id'],
+            'user_id' => auth()->id(),
+            'comment' => $validated['comment'],
         ]);
 
         // Décrémenter les places dispos
