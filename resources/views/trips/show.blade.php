@@ -33,7 +33,7 @@
 
             {{-- Trajet inactif : aucunes actions --}}
             @if (!$trip->is_active)
-                <p class="text-danger"><strong>Non disponible : le trajet est inactif.</strong></p>
+                <p class="text-danger"><strong>Indisponible : le trajet est inactif.</strong></p>
 
             @else
                 {{-- Proposeur : annuler le trajet --}}
